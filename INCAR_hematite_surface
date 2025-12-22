@@ -1,0 +1,63 @@
+# ------------------------------------------------------------------------------
+# File Name: INCAR (hematite_surface_training)
+# Description: VASP input file for MLFF training via AIMD simulations 
+# on the hematite surface using SCAN+rVV10 and Langevin thermostat.
+# Author: Mary Taiwo Ajide
+# Affiliation: University College Dublin
+# Contact: mary.ajide19@gmail.com
+#
+# Created: 1st December 2025
+# Last Updated: 3rd December 2025
+#
+# Copyright © 2025 Mary T. Ajide. All rights reserved.
+#
+# If used in scientific publications, please cite:
+# Mary T. Ajide, et al., "[Title]", [Journal], [Year].
+# ------------------------------------------------------------------------------
+
+#----------------------------
+# GENERAL VASP SETTINGS
+#----------------------------
+
+ENCUT       = 520           # Plane-wave cutoff energy (eV)
+ALGO        = Normal        # Default electronic minimization algorithm
+PREC        = A             # Accuracy level
+LREAL       = Auto          # Projectors in real-space (Auto for performance)
+KSPACING    = 0.150         # K-point density
+ISMEAR      = 0             # Smearing method (0 = Gaussian)
+SIGMA       = 0.1           # Smearing width (eV)
+
+ISYM        = 0             # Turn off symmetry (important for surfaces)
+NCORE       = 4             # Number of cores per MPI rank
+LWAVE       = .FALSE.
+LCHARG      = .FALSE.
+
+#----------------------------
+# VAN DER WAALS CORRECTION (SCAN+rVV10)
+#----------------------------
+
+METAGGA     = SCAN
+LUSE_VDW    = .TRUE.
+BPARAM      = 15.7          # rVV10 parameter
+CPARAM      = 0.0093
+LASPH       = .TRUE.
+
+#----------------------------
+# MOLECULAR DYNAMICS (AIMD)
+#----------------------------
+
+IBRION           = 0                  # MD mode
+MDALGO           = 3                  # Langevin thermostat (NVT)
+ISIF             = 2                  # No cell degrees of freedom
+LANGEVIN_GAMMA   = 10.0 10.0          # Friction coefficients (2D slab)
+POTIM            = 1.0                # Timestep (fs)
+TEBEG            = 200                # Initial temperature (K)
+TEEND            = 500                # Final temperature (K)
+NSW              = 5000               # Number of MD steps
+
+#----------------------------
+# MACHINE LEARNING
+#----------------------------
+
+ML_LMLFF         = .TRUE.
+ML_MODE          = TRAIN
