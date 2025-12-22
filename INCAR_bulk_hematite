@@ -1,0 +1,60 @@
+# ------------------------------------------------------------------------------
+# File Name: INCAR (hematite_bulk_training)
+# Description: VASP input for training MLFF on bulk α-Fe₂O₃ using SCAN+rVV10 
+# and Langevin dynamics.
+# Author: Mary Taiwo Ajide
+# Affiliation: University College Dublin
+# Contact: mary.ajide19@gmail.com
+#
+# Created: 1st December 2025
+# Last Updated: 3rd December 2025
+#
+# Copyright © 2025 Mary T. Ajide. All rights reserved.
+# ------------------------------------------------------------------------------
+
+#----------------------------
+# GENERAL VASP SETTINGS
+#----------------------------
+
+ENCUT       = 520
+ALGO        = Normal
+PREC        = A
+LREAL       = Auto
+KSPACING    = 0.150
+ISMEAR      = 0
+SIGMA       = 0.1
+
+ISYM        = 0
+NCORE       = 4
+LWAVE       = .FALSE.
+LCHARG      = .FALSE.
+
+#----------------------------
+# VAN DER WAALS CORRECTION (SCAN+rVV10)
+#----------------------------
+
+METAGGA     = SCAN
+LUSE_VDW    = .TRUE.
+BPARAM      = 15.7
+CPARAM      = 0.0093
+LASPH       = .TRUE.
+
+#----------------------------
+# MOLECULAR DYNAMICS (AIMD)
+#----------------------------
+
+IBRION           = 0
+MDALGO           = 3
+ISIF             = 2
+LANGEVIN_GAMMA   = 10.0 10.0
+POTIM            = 1.0
+TEBEG            = 200
+TEEND            = 500
+NSW              = 5000
+
+#----------------------------
+# MACHINE LEARNING
+#----------------------------
+
+ML_LMLFF         = .TRUE.
+ML_MODE          = TRAIN
