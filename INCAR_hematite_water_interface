@@ -1,0 +1,73 @@
+# ------------------------------------------------------------------------------
+# File Name: INCAR (for MLFF training with AIMD)
+# Description: VASP input file for on-the-fly machine learning force-field (MLFF) training 
+# using SCAN+rVV10 with Langevin NVT molecular dynamics. Designed for hematite–water systems 
+# including bulk, surface, and interface configurations.
+# Author: Mary Taiwo Ajide
+# Affiliation: University College Dublin
+# Contact: mary.ajide19@gmail.com
+#
+# Created: 1st December 2025
+# Last Updated: 3rd December 2025
+#
+# Copyright © 2025 Mary T. Ajide. All rights reserved.
+#
+# This file is part of original research work. Unauthorised use, duplication,
+# or distribution without explicit permission is prohibited. Portions of this
+# input may be adapted for academic or research purposes with proper citation.
+#
+# If used in scientific publications, please cite: Mary T. Ajide, et al., "[Title]",
+# [Journal], [Year].
+# ------------------------------------------------------------------------------
+
+#----------------------------
+# GENERAL VASP SETTINGS
+#----------------------------
+
+ENCUT       = 520          # Energy cutoff (recommended: >1.3x max ENMAX in POTCAR)
+ALGO        = Normal       # Standard electronic minimization
+PREC        = A            # Precision level (Accurate)
+LREAL       = Auto         # Real-space projection (Auto is good for large systems)
+KSPACING    = 0.150        # Defines K-point density
+
+ISMEAR      = 0            # Gaussian smearing (for molecules/insulators)
+SIGMA       = 0.1          # Smearing width
+
+ISYM        = 0            # Disable symmetry (important for ML and disordered systems)
+NCORE       = 4            # Number of cores per MPI rank (parallelization setting)
+
+LWAVE       = .FALSE.      # Do not write WAVECAR
+LCHARG      = .FALSE.      # Do not write CHGCAR
+
+#----------------------------
+# VAN DER WAALS CORRECTION: SCAN+rVV10
+#----------------------------
+
+METAGGA     = SCAN         # Meta-GGA functional
+LUSE_VDW    = .TRUE.       # Enable vdW correction
+BPARAM      = 15.7         # rVV10 parameter (Peng et al.)
+CPARAM      = 0.0093       # Default, can be tuned
+LASPH       = .TRUE.       # Non-spherical contributions to PAW potential
+
+#----------------------------
+# AIMD SETTINGS (NVT with Langevin Thermostat)
+#----------------------------
+
+IBRION            = 0             # Use Molecular Dynamics
+MDALGO            = 3             # Langevin dynamics (NVT)
+ISIF              = 2             # NVT ensemble (no cell relaxation)
+LANGEVIN_GAMMA    = 10.0 10.0 10.0  # Friction coefficients for Langevin thermostat
+
+POTIM             = 1.0           # Time step (fs)
+TEBEG             = 200           # Initial temperature (K)
+TEEND             = 500           # Final temperature (K)
+
+NSW               = 10000         # Total MD steps (adjust during training)
+
+#----------------------------
+# MACHINE LEARNING TRAINING
+#----------------------------
+
+ML_LMLFF    = .TRUE.      # Enable ML force field training
+ML_MODE     = TRAIN       # Training mode
+
